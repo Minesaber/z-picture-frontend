@@ -23,19 +23,19 @@ import GlobalHeader from '@/layouts/GlobalHeader.vue'
 <style scoped>
 #basicLayout .header {
   padding-inline: 20px;
-  background: white;
+  background: #fff;
   color: unset;
   margin-bottom: 16px;
 }
 
 #basicLayout .content {
   padding: 20px;
-  background: linear-gradient(to right, #efefef, #fff);
+  background: #fff;
   margin-bottom: 28px;
 }
 
 #basicLayout .footer {
-  background: #efefef;
+  background: #fafafa;
   padding: 16px;
   position: fixed;
   bottom: 0;
