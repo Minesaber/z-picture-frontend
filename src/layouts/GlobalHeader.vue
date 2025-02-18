@@ -17,7 +17,7 @@
           @click="doMenuClick"
         />
       </a-col>
-      <!--用户信息展示栏-->
+      <!-- 用户信息展示栏 -->
       <a-col flex="120px">
         <div class="user-login-status">
           <div v-if="loginUserStore.loginUser.id">
@@ -29,10 +29,8 @@
               <template #overlay>
                 <a-menu>
                   <a-menu-item @click="doLogout">
-                    <a href="javascript:;">
-                      <LogoutOutlined />
-                      退出登录</a
-                    >
+                    <LogoutOutlined />
+                    退出登录
                   </a-menu-item>
                 </a-menu>
               </template>
@@ -56,6 +54,7 @@ import { userLogoutUsingPost } from '@/api/userController.ts'
 
 const loginUserStore = useLoginUserStore()
 
+// 未经过滤的菜单项
 const originItems = [
   {
     key: '/',
@@ -64,9 +63,19 @@ const originItems = [
     title: '主页',
   },
   {
+    key: '/add_picture',
+    label: '创建图片',
+    title: '创建图片',
+  },
+  {
     key: '/admin/userManage',
     label: '用户管理',
     title: '用户管理',
+  },
+  {
+    key: '/admin/pictureManage',
+    label: '图片管理',
+    title: '图片管理',
   },
   {
     key: 'others',
@@ -75,9 +84,10 @@ const originItems = [
   },
 ]
 
+// 根据权限过滤菜单项
 const filterMenus = (menus = [] as MenuProps['items']) => {
   return menus?.filter((menu) => {
-    // 管理员菜单项
+    // 管理员才能看到 /admin 开头的菜单
     if (menu?.key?.startsWith('/admin')) {
       const loginUser = loginUserStore.loginUser
       if (!loginUser || loginUser.userRole !== 'admin') {
@@ -88,25 +98,25 @@ const filterMenus = (menus = [] as MenuProps['items']) => {
   })
 }
 
-const items = computed(() => {
-  return filterMenus(originItems)
+// 展示在菜单的路由数组
+const items = computed(() => filterMenus(originItems))
+
+const router = useRouter()
+// 当前要高亮的菜单项
+const current = ref<string[]>([])
+// 监听路由变化，更新高亮菜单项
+router.afterEach((to, from, next) => {
+  current.value = [to.path]
 })
 
 // 路由跳转事件
-const router = useRouter()
 const doMenuClick = ({ key }) => {
   router.push({
     path: key,
   })
 }
 
-// 当前菜单高亮项
-const current = ref<string[]>([])
-// 监听路由变化，更新菜单高亮项
-router.afterEach((to) => {
-  current.value = [to.path]
-})
-
+// 用户注销
 const doLogout = async () => {
   const res = await userLogoutUsingPost()
   if (res.data.code === 0) {
@@ -116,7 +126,7 @@ const doLogout = async () => {
     message.success('退出登录成功')
     await router.push('/user/login')
   } else {
-    message.error('退出登录失败' + res.data.message)
+    message.error('退出登录失败，' + res.data.message)
   }
 }
 </script>
@@ -127,13 +137,13 @@ const doLogout = async () => {
   align-items: center;
 }
 
-#globalHeader .logo {
-  height: 48px;
-}
-
-#globalHeader .title {
+.title {
   color: black;
   font-size: 18px;
   margin-left: 16px;
+}
+
+.logo {
+  height: 48px;
 }
 </style>
