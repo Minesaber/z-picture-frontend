@@ -10,8 +10,18 @@ plan:
   # 路由与导航
 dev:
   - base:
-  # exceptions、enums、stores（api、axios、router、access）、config、constants、utils、helpers
+    # exceptions、enums、stores（api、axios、router、access）、config、constants、utils、helpers
+    stores:
+      1、router（新增批量抓取图片页面）
+    constants:
+      1、picture.ts（图片的审核状态）
   - model:
   # type
   - biz:
   # layouts、pages、components
+    pages:
+      1、PictureManagePage
+      2、AddPictureBatchPage
+      3、AddPicturePage
+    components:
+      1、UrlPictureUpload

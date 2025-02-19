@@ -14,7 +14,7 @@ declare namespace API {
 
   type getPictureVOByIdUsingGETParams = {
     /** id */
-    id?: string
+    id?: number
   }
 
   type getUserByIdUsingGETParams = {
@@ -64,6 +64,10 @@ declare namespace API {
     picSize?: number
     picWidth?: number
     profile?: string
+    reviewMessage?: string
+    reviewStatus?: number
+    reviewTime?: string
+    reviewerId?: number
     tags?: string
     updateTime?: string
     url?: string
@@ -95,11 +99,21 @@ declare namespace API {
     picSize?: number
     picWidth?: number
     profile?: string
+    reviewMessage?: string
+    reviewStatus?: number
+    reviewTime?: string
+    reviewerId?: number
     searchText?: string
     sortField?: string
     sortOrder?: string
     tags?: string[]
     userId?: number
+  }
+
+  type PictureReviewRequest = {
+    id?: number
+    reviewMessage?: string
+    reviewStatus?: number
   }
 
   type PictureUpdateRequest = {
@@ -108,6 +122,18 @@ declare namespace API {
     name?: string
     profile?: string
     tags?: string[]
+  }
+
+  type PictureUploadByBatchRequest = {
+    count?: number
+    namePrefix?: string
+    searchText?: string
+  }
+
+  type PictureUploadRequest = {
+    id?: number
+    picName?: string
+    url?: string
   }
 
   type PictureVO = {
@@ -127,6 +153,18 @@ declare namespace API {
     url?: string
     userId?: number
     userVO?: UserVO
+  }
+
+  type ResponseBoolean_ = {
+    code?: number
+    data?: boolean
+    message?: string
+  }
+
+  type ResponseInt_ = {
+    code?: number
+    data?: number
+    message?: string
   }
 
   type ResponseLong_ = {
@@ -207,6 +245,8 @@ declare namespace API {
 
   type uploadPictureUsingPOSTParams = {
     id?: number
+    picName?: string
+    url?: string
   }
 
   type User = {

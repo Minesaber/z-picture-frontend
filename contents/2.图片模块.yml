@@ -1,17 +1,17 @@
 req:
+  #各子模块的增查改删
   - crud:
-    #各子模块的增查改删
 plan:
-  - workflow:
   # 工作流程
-  - api:
+  - workflow:
   # 接口集成
-  - router:
+  - api:
   # 路由与导航
+  - router:
 dev:
-  - base:
   # exceptions、enums、stores（api、axios、router、access）、config、constants、utils、helpers
-  - model:
+  - base:
   # type
-  - biz:
+  - model:
   # layouts、pages、components
+  - biz:
