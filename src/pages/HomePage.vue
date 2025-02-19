@@ -42,7 +42,7 @@
             <template #cover>
               <img
                 :alt="picture.name"
-                :src="picture.url"
+                :src="picture.thumbnailUrl ?? picture.url"
                 style="height: 180px; object-fit: cover"
               />
             </template>
@@ -68,8 +68,8 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref } from 'vue'
 import {
-  listPictureCategoryTagUsingGet,
   getPictureVoByPageUsingPost,
+  listPictureCategoryTagUsingGet,
 } from '@/api/pictureController.ts'
 import { message } from 'ant-design-vue'
 import { useRouter } from 'vue-router' // 定义数据
