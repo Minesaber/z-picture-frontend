@@ -29,55 +29,35 @@
       </a-space>
     </div>
     <!-- 图片列表 -->
-    <a-list
-      :grid="{ gutter: 16, xs: 1, sm: 2, md: 3, lg: 4, xl: 5, xxl: 6 }"
-      :data-source="dataList"
-      :pagination="pagination"
-      :loading="loading"
-    >
-      <template #renderItem="{ item: picture }">
-        <a-list-item style="padding: 0">
-          <!-- 单张图片 -->
-          <a-card hoverable @click="doClickPicture(picture)">
-            <template #cover>
-              <img
-                :alt="picture.name"
-                :src="picture.thumbnailUrl ?? picture.url"
-                style="height: 180px; object-fit: cover"
-              />
-            </template>
-            <a-card-meta :title="picture.name">
-              <template #description>
-                <a-flex>
-                  <a-tag color="green">
-                    {{ picture.category ?? '默认' }}
-                  </a-tag>
-                  <a-tag v-for="tag in picture.tags" :key="tag">
-                    {{ tag }}
-                  </a-tag>
-                </a-flex>
-              </template>
-            </a-card-meta>
-          </a-card>
-        </a-list-item>
-      </template>
-    </a-list>
+    <PictureList :dataList="dataList" :loading="loading" />
+    <!-- 分页 -->
+    <a-pagination
+      style="text-align: right"
+      v-model:current="searchParams.current"
+      v-model:pageSize="searchParams.pageSize"
+      :total="total"
+      @change="onPageChange"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import {
   getPictureVoByPageUsingPost,
   listPictureCategoryTagUsingGet,
 } from '@/api/pictureController.ts'
 import { message } from 'ant-design-vue'
-import { useRouter } from 'vue-router' // 定义数据
+import PictureList from '@/components/picture/PictureList.vue'
+import { useLoginUserStore } from '@/stores/useLoginUserStore.ts'
+import axios from 'axios'
+import request from '@/request.ts'
 
 // 定义数据
 const dataList = ref<API.PictureVO[]>([])
 const total = ref(0)
 const loading = ref(true)
+const loginUserStore = useLoginUserStore()
 
 // 搜索条件
 const searchParams = reactive<API.PictureQueryRequest>({
@@ -89,49 +69,41 @@ const searchParams = reactive<API.PictureQueryRequest>({
 
 // 获取数据
 const fetchData = async () => {
-  loading.value = true
-  // 转换搜索参数
-  const params = {
-    ...searchParams,
-    tags: [] as string[],
-  }
-  if (selectedCategory.value !== 'all') {
-    params.category = selectedCategory.value
-  }
-  // [true, false, false] => ['java']
-  selectedTagList.value.forEach((useTag, index) => {
-    if (useTag) {
-      params.tags.push(tagList.value[index])
+  if (loginUserStore.loginUser.id) {
+    loading.value = true
+    // 转换搜索参数
+    const params = {
+      ...searchParams,
+      tags: [] as string[],
     }
-  })
-  const res = await getPictureVoByPageUsingPost(params)
-  if (res.data.code === 0 && res.data.data) {
-    dataList.value = res.data.data.records ?? []
-    total.value = res.data.data.total ?? 0
+    if (selectedCategory.value !== 'all') {
+      params.category = selectedCategory.value
+    }
+    // [true, false, false] => ['java']
+    selectedTagList.value.forEach((useTag, index) => {
+      if (useTag) {
+        params.tags.push(tagList.value[index])
+      }
+    })
+    const res = await getPictureVoByPageUsingPost(params)
+    if (res.data.code === 0 && res.data.data) {
+      dataList.value = res.data.data.records ?? []
+      total.value = res.data.data.total ?? 0
+    } else {
+      message.error('获取数据失败，' + res.data.message)
+    }
+    loading.value = false
   } else {
-    message.error('获取数据失败，' + res.data.message)
+    message.error('未登录')
   }
-  loading.value = false
 }
 
-// 页面加载时获取数据，请求一次
-onMounted(() => {
-  fetchData()
-})
-
 // 分页参数
-const pagination = computed(() => {
-  return {
-    current: searchParams.current,
-    pageSize: searchParams.pageSize,
-    total: total.value,
-    onChange: (page: number, pageSize: number) => {
-      searchParams.current = page
-      searchParams.pageSize = pageSize
-      fetchData()
-    },
-  }
-})
+const onPageChange = (page: number, pageSize: number) => {
+  searchParams.current = page
+  searchParams.pageSize = pageSize
+  fetchData()
+}
 
 // 搜索
 const doSearch = () => {
@@ -151,24 +123,22 @@ const selectedTagList = ref<boolean[]>([])
  * @param values
  */
 const getTagCategoryOptions = async () => {
-  const res = await listPictureCategoryTagUsingGet()
-  if (res.data.code === 0 && res.data.data) {
-    tagList.value = res.data.data.tagList ?? []
-    categoryList.value = res.data.data.categoryList ?? []
-  } else {
-    message.error('获取标签分类列表失败，' + res.data.message)
+  if (loginUserStore.loginUser.id) {
+    if (loginUserStore.loginUser.id) {
+      const res = await listPictureCategoryTagUsingGet()
+      if (res.data.code === 0 && res.data.data) {
+        tagList.value = res.data.data.tagList ?? []
+        categoryList.value = res.data.data.categoryList ?? []
+      } else {
+        message.error('获取标签分类列表失败，' + res.data.message)
+      }
+    }
   }
 }
 
-const router = useRouter()
-// 跳转至图片详情页
-const doClickPicture = (picture: API.PictureVO) => {
-  router.push({
-    path: `/picture/${picture.id}`,
-  })
-}
-
+// 页面加载时获取数据，请求一次
 onMounted(() => {
+  fetchData()
   getTagCategoryOptions()
 })
 </script>

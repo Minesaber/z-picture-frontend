@@ -1,6 +1,10 @@
 req:
   #各子模块的增查改删
   - crud:
+      1、空间管理页面
+      2、创建空间页面
+      3、用户创建私有空间页面
+      4、用户使用私有空间页面（空间详情页）
 plan:
   # 工作流程
   - workflow:
@@ -10,6 +14,9 @@ plan:
   - router:
 dev:
   # exceptions、enums、stores（api、axios、router、access）、config、constants、utils、helpers
+  - base:
+      1、router（创建空间、我的空间、空间详情）
+      2、constants(空间相关常量)
   - base:
   # type
   - model:

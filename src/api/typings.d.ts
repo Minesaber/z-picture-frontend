@@ -1,4 +1,16 @@
 declare namespace API {
+  type CodeRefreshVO = {
+    cidCode?: string
+    reconnect?: boolean
+  }
+
+  type CreateOutPaintingTaskResponse = {
+    code?: string
+    message?: string
+    output?: Output
+    requestId?: string
+  }
+
   type deletePictureByIdUsingPOSTParams = {
     id?: number
   }
@@ -12,7 +24,22 @@ declare namespace API {
     id?: number
   }
 
+  type getPictureOutPaintingTaskUsingGETParams = {
+    /** taskId */
+    taskId?: string
+  }
+
   type getPictureVOByIdUsingGETParams = {
+    /** id */
+    id?: number
+  }
+
+  type getSpaceByIdUsingGETParams = {
+    /** id */
+    id?: number
+  }
+
+  type getSpaceVOByIdUsingGETParams = {
     /** id */
     id?: number
   }
@@ -25,6 +52,33 @@ declare namespace API {
   type getUserVOByIdUsingGETParams = {
     /** id */
     id?: number
+  }
+
+  type ImageSearchResult = {
+    fromUrl?: string
+    thumbUrl?: string
+  }
+
+  type OutPaintingTaskResult = {
+    output?: Output1
+    requestId?: string
+  }
+
+  type Output = {
+    taskId?: string
+    taskStatus?: string
+  }
+
+  type Output1 = {
+    code?: string
+    endTime?: string
+    message?: string
+    outputImageUrl?: string
+    scheduledTime?: string
+    submitTime?: string
+    taskId?: string
+    taskMetrics?: TaskMetrics
+    taskStatus?: string
   }
 
   type PagePicture_ = {
@@ -43,12 +97,42 @@ declare namespace API {
     total?: number
   }
 
+  type PageSpace_ = {
+    current?: number
+    pages?: number
+    records?: Space[]
+    size?: number
+    total?: number
+  }
+
+  type PageSpaceVO_ = {
+    current?: number
+    pages?: number
+    records?: SpaceVO[]
+    size?: number
+    total?: number
+  }
+
   type PageUserVO_ = {
     current?: number
     pages?: number
     records?: UserVO[]
     size?: number
     total?: number
+  }
+
+  type Parameters = {
+    addWatermark?: boolean
+    angle?: number
+    bestQuality?: boolean
+    bottomOffset?: number
+    leftOffset?: number
+    limitImageSize?: boolean
+    outputRatio?: string
+    rightOffset?: number
+    topOffset?: number
+    xScale?: number
+    yScale?: number
   }
 
   type Picture = {
@@ -58,6 +142,7 @@ declare namespace API {
     id?: number
     isDeleted?: number
     name?: string
+    picColor?: string
     picFormat?: string
     picHeight?: number
     picScale?: number
@@ -68,6 +153,7 @@ declare namespace API {
     reviewStatus?: number
     reviewTime?: string
     reviewerId?: number
+    spaceId?: number
     tags?: string
     thumbnailUrl?: string
     updateTime?: string
@@ -80,6 +166,14 @@ declare namespace API {
     tagList?: string[]
   }
 
+  type PictureEditByBatchRequest = {
+    category?: string
+    nameRule?: string
+    pictureIdList?: number[]
+    spaceId?: number
+    tags?: string[]
+  }
+
   type PictureEditRequest = {
     category?: string
     id?: number
@@ -88,11 +182,18 @@ declare namespace API {
     tags?: string[]
   }
 
+  type PictureOutPaintingRequest = {
+    parameters?: Parameters
+    pictureId?: number
+  }
+
   type PictureQueryRequest = {
     category?: string
     current?: number
+    endEditTime?: string
     id?: number
     name?: string
+    nullSpaceId?: boolean
     pageSize?: number
     picFormat?: string
     picHeight?: number
@@ -107,6 +208,8 @@ declare namespace API {
     searchText?: string
     sortField?: string
     sortOrder?: string
+    spaceId?: number
+    startEditTime?: string
     tags?: string[]
     userId?: number
   }
@@ -115,6 +218,15 @@ declare namespace API {
     id?: number
     reviewMessage?: string
     reviewStatus?: number
+  }
+
+  type PictureSearchByColorRequest = {
+    picColor?: string
+    spaceId?: number
+  }
+
+  type PictureSearchByPictureRequest = {
+    pictureId?: number
   }
 
   type PictureUpdateRequest = {
@@ -134,6 +246,7 @@ declare namespace API {
   type PictureUploadRequest = {
     id?: number
     picName?: string
+    spaceId?: number
     url?: string
   }
 
@@ -143,12 +256,14 @@ declare namespace API {
     editTime?: string
     id?: number
     name?: string
+    picColor?: string
     picFormat?: string
     picHeight?: number
     picScale?: number
     picSize?: number
     picWidth?: number
     profile?: string
+    spaceId?: number
     tags?: string[]
     thumbnailUrl?: string
     updateTime?: string
@@ -163,9 +278,39 @@ declare namespace API {
     message?: string
   }
 
+  type ResponseCodeRefreshVO_ = {
+    code?: number
+    data?: CodeRefreshVO
+    message?: string
+  }
+
+  type ResponseCreateOutPaintingTaskResponse_ = {
+    code?: number
+    data?: CreateOutPaintingTaskResponse
+    message?: string
+  }
+
   type ResponseInt_ = {
     code?: number
     data?: number
+    message?: string
+  }
+
+  type ResponseListImageSearchResult_ = {
+    code?: number
+    data?: ImageSearchResult[]
+    message?: string
+  }
+
+  type ResponseListPictureVO_ = {
+    code?: number
+    data?: PictureVO[]
+    message?: string
+  }
+
+  type ResponseListSpaceLevelDetailVO_ = {
+    code?: number
+    data?: SpaceLevelDetailVO[]
     message?: string
   }
 
@@ -181,6 +326,12 @@ declare namespace API {
     message?: string
   }
 
+  type ResponseOutPaintingTaskResult_ = {
+    code?: number
+    data?: OutPaintingTaskResult
+    message?: string
+  }
+
   type ResponsePagePicture_ = {
     code?: number
     data?: PagePicture_
@@ -190,6 +341,18 @@ declare namespace API {
   type ResponsePagePictureVO_ = {
     code?: number
     data?: PagePictureVO_
+    message?: string
+  }
+
+  type ResponsePageSpace_ = {
+    code?: number
+    data?: PageSpace_
+    message?: string
+  }
+
+  type ResponsePageSpaceVO_ = {
+    code?: number
+    data?: PageSpaceVO_
     message?: string
   }
 
@@ -217,6 +380,18 @@ declare namespace API {
     message?: string
   }
 
+  type ResponseSpace_ = {
+    code?: number
+    data?: Space
+    message?: string
+  }
+
+  type ResponseSpaceVO_ = {
+    code?: number
+    data?: SpaceVO
+    message?: string
+  }
+
   type ResponseString_ = {
     code?: number
     data?: string
@@ -240,6 +415,82 @@ declare namespace API {
     message?: string
   }
 
+  type Space = {
+    createTime?: string
+    editTime?: string
+    id?: number
+    isDeleted?: number
+    maxCount?: number
+    maxSize?: number
+    spaceLevel?: number
+    spaceName?: string
+    totalCount?: number
+    totalSize?: number
+    updateTime?: string
+    userId?: number
+  }
+
+  type SpaceAddRequest = {
+    spaceLevel?: number
+    spaceName?: string
+  }
+
+  type SpaceEditRequest = {
+    id?: number
+    spaceName?: string
+  }
+
+  type SpaceLevelDetailVO = {
+    maxCount?: number
+    maxSize?: number
+    text?: string
+    value?: number
+  }
+
+  type SpaceQueryRequest = {
+    current?: number
+    id?: number
+    pageSize?: number
+    sortField?: string
+    sortOrder?: string
+    spaceLevel?: number
+    spaceName?: string
+    userId?: number
+  }
+
+  type SpaceUpdateRequest = {
+    id?: number
+    maxCount?: number
+    maxSize?: number
+    spaceLevel?: number
+    spaceName?: string
+  }
+
+  type SpaceVO = {
+    createTime?: string
+    editTime?: string
+    id?: number
+    maxCount?: number
+    maxSize?: number
+    spaceLevel?: number
+    spaceName?: string
+    totalCount?: number
+    totalSize?: number
+    updateTime?: string
+    userId?: number
+    userVO?: UserVO
+  }
+
+  type SseEmitter = {
+    timeout?: number
+  }
+
+  type TaskMetrics = {
+    failed?: number
+    succeeded?: number
+    total?: number
+  }
+
   type testDownloadFileUsingGETParams = {
     /** key */
     key?: string
@@ -248,6 +499,7 @@ declare namespace API {
   type uploadPictureUsingPOSTParams = {
     id?: number
     picName?: string
+    spaceId?: number
     url?: string
   }
 
@@ -314,5 +566,26 @@ declare namespace API {
     userName?: string
     userProfile?: string
     userRole?: string
+  }
+
+  type WxMsgRequest = {
+    createTime?: number
+    fromUserName?: string
+    msgType?: string
+    toUserName?: string
+  }
+
+  type WxTxtMsgRequest = {
+    content?: string
+    createTime?: number
+    event?: string
+    eventKey?: string
+    fromUserName?: string
+    idx?: string
+    msgDataId?: string
+    msgId?: string
+    msgType?: string
+    ticket?: string
+    toUserName?: string
   }
 }

@@ -1,7 +1,7 @@
 <template>
   <div id="userRegisterPage">
-    <h2 class="title">ZPicture - 用户注册</h2>
-    <div class="desc">企业级智能协同云图库</div>
+    <h2 class="title" style="font-family: 黑体, serif">用户注册</h2>
+    <div class="desc">ZPicture</div>
     <a-form :model="formState" name="basic" autocomplete="off" @finish="handleSubmit">
       <a-form-item name="userAccount" :rules="[{ required: true, message: '请输入账号!' }]">
         <a-input v-model:value="formState.userAccount" placeholder="请输入账号" />

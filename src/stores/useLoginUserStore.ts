@@ -6,7 +6,7 @@ import { getLoginUserUsingGet } from '@/api/userController.ts'
  * 存储用户登录信息的状态
  */
 export const useLoginUserStore = defineStore('loginUser', () => {
-  const loginUser = ref<API.UserLoginVO>({
+  const loginUser = ref<API.UserVO>({
     userName: '未登录',
   })
 
@@ -31,5 +31,5 @@ export const useLoginUserStore = defineStore('loginUser', () => {
   /**
    * 返回
    */
-  return { loginUser, setLoginUser, fetchLoginUser }
+  return {loginUser, setLoginUser, fetchLoginUser }
 })

@@ -108,9 +108,15 @@ const fetchPictureDetail = async () => {
       picture.value = res.data.data
     } else {
       message.error('获取图片详情失败，' + res.data.message)
+      await router.push({
+        path: '/',
+      })
     }
   } catch (e: any) {
     message.error('获取图片详情失败：' + e.message)
+    await router.push({
+      path: '/',
+    })
   }
 }
 
@@ -122,7 +128,13 @@ const router = useRouter()
 
 // 编辑
 const doEdit = () => {
-  router.push('/add_picture?id=' + picture.value.id)
+  router.push({
+    path: '/add_picture',
+    query: {
+      id: picture.value.id,
+      spaceId: picture.value.spaceId,
+    },
+  })
 }
 
 // 删除数据
@@ -134,6 +146,17 @@ const doDelete = async () => {
   const res = await deletePictureByIdUsingPost({ id })
   if (res.data.code === 0) {
     message.success('删除成功')
+    if (!picture.value.spaceId) {
+      router.push({
+        path: '/',
+        replace: true,
+      })
+    } else {
+      router.push({
+        path: `/space/${picture.value.spaceId}`,
+        replace: true,
+      })
+    }
   } else {
     message.error('删除失败')
   }

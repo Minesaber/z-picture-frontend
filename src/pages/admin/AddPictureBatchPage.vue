@@ -4,7 +4,7 @@
     <!-- 图片信息表单 -->
     <a-form name="formData" layout="vertical" :model="formData" @finish="handleSubmit">
       <a-form-item name="searchText" label="关键词" required>
-        <a-input v-model:value="formData.searchText" placeholder="请输入关键词" allow-clear/>
+        <a-input v-model:value="formData.searchText" placeholder="请输入关键词" allow-clear />
       </a-form-item>
       <a-form-item name="count" label="抓取数量">
         <a-input-number
@@ -59,7 +59,7 @@ const handleSubmit = async (values: any) => {
   if (res.data.code === 0 && res.data.data) {
     message.success(`创建成功，共 ${res.data.data} 条`)
     // 跳转到主页
-    router.push({
+    await router.push({
       path: `/`,
     })
   } else {

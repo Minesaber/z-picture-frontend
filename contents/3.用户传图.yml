@@ -24,4 +24,4 @@ dev:
       2、AddPictureBatchPage
       3、AddPicturePage
     components:
-      1、UrlPictureUpload
+      1、PictureUrlUpload
