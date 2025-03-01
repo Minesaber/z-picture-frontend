@@ -40,20 +40,18 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 import { message } from 'ant-design-vue'
-import { useRouter } from 'vue-router'
 import { WechatOutlined } from '@ant-design/icons-vue'
 import { refreshUsingGet, resendCodeUsingGet } from '@/api/wxLoginController.ts'
 import { BASE_URL } from '@/constants/backend.ts'
 import { healthUsingGet } from '@/api/mainController.ts'
 import { InfoCircleOutlined } from '@ant-design/icons-vue'
+import router from '@/router'
 
-const isHealthChecked = ref(false)
 const qr = ref<string>('http://weixin.qq.com/r/mp/bhHYwKLExv_5reaj90R8')
-const cIdCode = ref<string>('正在加载标识码( •̀ ω •́ )✧')
+const cIdCode = ref<string>('正在加载标识码 ( •̀ ω •́ )✧')
 let eventSource: EventSource | null = null
 const qrStatus = ref<'active' | 'loading' | 'expired' | 'scanned'>('active')
 const statusMessage = ref<string>('等待输入')
-const router = useRouter()
 
 /**
  * 建立sse连接
@@ -64,7 +62,15 @@ const setupSSE = async () => {
     message.error('SSE 连接失败')
     eventSource?.close()
   }
-  eventSource.onmessage = (event) => {}
+  eventSource.onmessage = async (event) => {
+    if (event.data === 'success-login') {
+      statusMessage.value = '载入数据中，请稍后'
+      await router.push({
+        path: `/`,
+      })
+      message.success('登录成功')
+    }
+  }
 }
 
 /**

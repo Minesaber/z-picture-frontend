@@ -11,7 +11,7 @@
       <a-layout>
         <GlobalSider class="sider" />
         <a-layout-content :class="['content', { 'bg-container': isLoginPage }]">
-          <LoginTypeSegment />
+          <LoginTypeSegment v-if="!loginUserStore.loginUser.id" />
           <router-view />
         </a-layout-content>
       </a-layout>
@@ -30,6 +30,9 @@ import GlobalSider from '@/layouts/GlobalSider.vue'
 import LoginTypeSegment from '@/pages/user/LoginTypeSegment.vue'
 import { LoadingOutlined } from '@ant-design/icons-vue'
 import { h } from 'vue'
+import { useLoginUserStore } from '@/stores/useLoginUserStore.ts'
+
+const loginUserStore = useLoginUserStore()
 
 const indicator = h(LoadingOutlined, {
   style: {

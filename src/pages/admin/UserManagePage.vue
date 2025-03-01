@@ -150,7 +150,7 @@ const doDelete = async (id: string) => {
     message.success('删除成功')
     fetchData()
   } else {
-    message.error('删除失败')
+    message.error('删除失败，' + res.data.message)
   }
 }
 </script>

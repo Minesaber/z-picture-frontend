@@ -1,7 +1,8 @@
 import { generateService } from '@umijs/openapi'
+import { BASE_URL } from '@/constants/backend.js'
 
 generateService({
   requestLibPath: "import request from '@/request'",
-  schemaPath: 'http://localhost:1280/api/v2/api-docs',
+  schemaPath: BASE_URL + '/api/v2/api-docs',
   serversPath: './src',
 })
