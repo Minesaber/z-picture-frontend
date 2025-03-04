@@ -4,8 +4,12 @@
       <a-col flex="200px">
         <router-link to="/">
           <div class="title-bar">
-            <img class="logo" src="https://s3.uuu.ovh/imgs/2025/02/26/1049892afc36d931.png" alt="logo" />
-            <div class="title">ZPicture</div>
+            <img
+              class="logo"
+              src="https://s3.uuu.ovh/imgs/2025/03/03/875c6fffdef47567.png"
+              alt="logo"
+            />
+            <div class="title">云图库</div>
           </div>
         </router-link>
       </a-col>
@@ -150,11 +154,12 @@ const doLogout = async () => {
 
 .title {
   color: black;
-  font-size: 18px;
+  font-size: 16px;
   margin-left: 16px;
+  font-family: 宋体, serif;
 }
 
 .logo {
-  height: 48px;
+  height: 50px;
 }
 </style>

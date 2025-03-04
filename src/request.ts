@@ -1,10 +1,11 @@
 import axios from 'axios'
 import router from '@/router'
-import { BASE_URL } from '@/constants/backend.ts'
+
+const API_URL = import.meta.env.VITE_API_URL
 
 // 创建 Axios 实例
 const myAxios = axios.create({
-  baseURL: BASE_URL,
+  baseURL: API_URL,
   timeout: 60000,
   withCredentials: true,
 })

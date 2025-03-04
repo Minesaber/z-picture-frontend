@@ -35,6 +35,9 @@ const loading = ref<boolean>(false)
  * @param file
  */
 const handleUpload = async () => {
+  setTimeout(() => {
+    message.info('小水管服务器，请耐心等待操作执行')
+  }, 200)
   loading.value = true
   try {
     const params: API.PictureUploadRequest = { url: fileUrl.value }

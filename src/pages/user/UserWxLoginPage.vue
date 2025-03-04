@@ -19,7 +19,7 @@
             </a-popover>
           </a>
         </div>
-        <span class="code-value">{{ cIdCode }}</span>
+        <span>{{ cIdCode }}</span>
       </div>
       <div class="qr-container">
         <a-qrcode
@@ -41,11 +41,12 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { message } from 'ant-design-vue'
 import { WechatOutlined } from '@ant-design/icons-vue'
-import { refreshUsingGet, resendCodeUsingGet } from '@/api/wxLoginController.ts'
-import { BASE_URL } from '@/constants/backend.ts'
+import { loginUsingGet, refreshUsingGet, resendCodeUsingGet } from '@/api/wxLoginController.ts'
 import { healthUsingGet } from '@/api/mainController.ts'
 import { InfoCircleOutlined } from '@ant-design/icons-vue'
 import router from '@/router'
+import { useRoute } from 'vue-router'
+import { useLoginUserStore } from '@/stores/useLoginUserStore.ts'
 
 const qr = ref<string>('http://weixin.qq.com/r/mp/bhHYwKLExv_5reaj90R8')
 const cIdCode = ref<string>('正在加载标识码 ( •̀ ω •́ )✧')
@@ -53,22 +54,29 @@ let eventSource: EventSource | null = null
 const qrStatus = ref<'active' | 'loading' | 'expired' | 'scanned'>('active')
 const statusMessage = ref<string>('等待输入')
 
+const loginUserStore = useLoginUserStore()
+const route = useRoute()
+const API_URL = import.meta.env.VITE_API_URL
+
 /**
  * 建立sse连接
  */
 const setupSSE = async () => {
-  eventSource = new EventSource(BASE_URL + '/api/wx/subscribe')
-  eventSource.onerror = () => {
-    message.error('SSE 连接失败')
-    eventSource?.close()
-  }
+  eventSource = new EventSource(API_URL + '/api/wx/subscribe')
   eventSource.onmessage = async (event) => {
     if (event.data === 'success-login') {
-      statusMessage.value = '载入数据中，请稍后'
-      await router.push({
-        path: `/`,
-      })
-      message.success('登录成功')
+      statusMessage.value = '加载中，请稍后'
+      const res = await loginUsingGet()
+      if (res.data.code === 0 && res.data.data) {
+        await loginUserStore.fetchLoginUser()
+        const redirect = route.query.redirect as string
+        if (redirect) {
+          await router.push({ path: redirect, replace: true })
+        } else {
+          await router.push({ path: '/', replace: true })
+        }
+        message.success('登录成功 ヾ(≧▽≦*)o')
+      }
     }
   }
 }
@@ -91,7 +99,7 @@ const fetchLoginData = async () => {
         cIdCode.value = result
       }
     } else {
-      message.error('请求标识码失败')
+      message.error('请求标识码失败：' + res.data.message)
     }
   } catch (error) {
     message.error('请求异常' + error.message)
@@ -114,7 +122,7 @@ const refreshLoginData = async () => {
         await fetchLoginData()
       }
     } else {
-      message.error('刷新请求失败')
+      message.error('刷新请求失败：' + res.data.message)
     }
   } catch (error) {
     message.error('请求异常' + error.message)

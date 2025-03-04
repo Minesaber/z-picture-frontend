@@ -32,7 +32,6 @@ router.beforeEach(async (to, from, next) => {
     toUrl.startsWith('/user/register')
   ) {
     if (loginUser.id) {
-      message.info('请先退出登录')
       return next(`/`)
     } else {
       // 暂只开放微信注册

@@ -1,11 +1,19 @@
 <template>
-  <a-modal
-    class="image-out-painting"
-    v-model:open="visible"
-    title="AI 扩图"
-    :footer="false"
-    @cancel="closeModal"
-  >
+  <a-modal class="image-out-painting" v-model:open="visible" :footer="false" @cancel="closeModal">
+    <template #title>
+      AI 扩图
+      <a style="color: #aaa; font-weight: 100" class="desc">
+        <a-popover placement="right" style="font-weight: 100">
+          <template #title>
+            <span style="color: #aaa; font-weight: 100">
+              图像分辨率：不低于512×512像素且不超过4096×4096像素<br />
+              图像单边长度范围：[512,4096]，单位像素
+            </span>
+          </template>
+          <InfoCircleOutlined />
+        </a-popover>
+      </a>
+    </template>
     <a-row gutter="16">
       <a-col span="12">
         <h4>原始图片</h4>
@@ -39,6 +47,7 @@ import {
   uploadPictureByUrlUsingPost,
 } from '@/api/pictureController.ts'
 import { message } from 'ant-design-vue'
+import { InfoCircleOutlined } from '@ant-design/icons-vue'
 
 interface Props {
   picture?: API.PictureVO
@@ -74,7 +83,7 @@ const createTask = async () => {
     // 开启轮询
     startPolling()
   } else {
-    message.error('图片任务失败，' + res.data.message)
+    message.error('创建任务失败，' + res.data.message)
   }
 }
 
@@ -177,5 +186,12 @@ defineExpose({
 <style>
 .image-out-painting {
   text-align: center;
+}
+
+.desc {
+  text-align: center;
+  color: #aaa;
+  margin-bottom: 16px;
+  font-size: 14px;
 }
 </style>

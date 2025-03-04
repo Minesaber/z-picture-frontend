@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, reactive } from 'vue'
+import { reactive } from 'vue'
 import { userLoginUsingPost } from '@/api/userController.ts'
 import { useLoginUserStore } from '@/stores/useLoginUserStore.ts'
 import { message } from 'ant-design-vue'
@@ -48,7 +48,7 @@ const handleSubmit = async () => {
     const res = await userLoginUsingPost(formState)
     if (res.data.code === 0 && res.data.data) {
       await loginUserStore.fetchLoginUser()
-      message.success('登录成功')
+      message.success('登录成功 ヾ(≧▽≦*)o')
       const redirect = route.query.redirect as string
       if (redirect) {
         await router.push({ path: redirect, replace: true })

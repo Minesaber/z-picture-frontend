@@ -21,6 +21,8 @@ import { LoadingOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import type { UploadProps } from 'ant-design-vue'
 import { message } from 'ant-design-vue'
 import { uploadPictureUsingPost } from '@/api/pictureController.ts'
+import { useRoute } from 'vue-router'
+import { useLoginUserStore } from '@/stores/useLoginUserStore.ts'
 
 interface Props {
   picture?: API.PictureVO
@@ -29,19 +31,31 @@ interface Props {
 }
 
 const props = defineProps<Props>()
+const route = useRoute()
+const loginUserStore = useLoginUserStore()
 
 /**
  * 上传图片
  * @param file
  */
 const handleUpload = async ({ file }: any) => {
+  setTimeout(() => {
+    message.info('小水管服务器，请耐心等待操作执行')
+  }, 200)
   loading.value = true
   try {
     const params: API.PictureUploadRequest = props.picture ? { id: props.picture.id } : {}
     params.spaceId = props.spaceId
     const res = await uploadPictureUsingPost(params, {}, file)
     if (res.data.code === 0 && res.data.data) {
-      message.success('图片上传成功')
+      // 根据请求路径是否具有spaceId参数判断是否需要管理员审核
+      if (route.fullPath.includes('spaceId')) {
+        message.success('图片上传成功')
+      } else if (loginUserStore.loginUser.userRole === 'user') {
+        message.success('图片上传成功，请等待管理员审核')
+      } else {
+        message.success('图片上传成功，已自动过审')
+      }
       // 将上传成功的图片信息传递给父组件
       props.onSuccess?.(res.data.data)
     } else {
@@ -66,11 +80,11 @@ const beforeUpload = (file: UploadProps['fileList'][number]) => {
     message.error('不支持上传该格式的图片，推荐 jpg 或 png')
   }
   // 校验图片大小
-  const isLt2M = file.size / 1024 / 1024 < 2
-  if (!isLt2M) {
-    message.error('不能上传超过 2M 的图片')
+  const isLt10M = file.size / 1024 / 1024 < 10
+  if (!isLt10M) {
+    message.error('不能上传超过 10MB 的图片')
   }
-  return isJpgOrPng && isLt2M
+  return isJpgOrPng && isLt10M
 }
 </script>
 <style scoped>

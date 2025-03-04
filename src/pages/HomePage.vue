@@ -35,8 +35,8 @@
       style="text-align: right"
       v-model:current="searchParams.current"
       v-model:pageSize="searchParams.pageSize"
-      :total="total"
       @change="onPageChange"
+      :total="total"
     />
   </div>
 </template>
@@ -50,8 +50,6 @@ import {
 import { message } from 'ant-design-vue'
 import PictureList from '@/components/picture/PictureList.vue'
 import { useLoginUserStore } from '@/stores/useLoginUserStore.ts'
-import axios from 'axios'
-import request from '@/request.ts'
 
 // 定义数据
 const dataList = ref<API.PictureVO[]>([])
@@ -88,7 +86,7 @@ const fetchData = async () => {
     const res = await getPictureVoByPageUsingPost(params)
     if (res.data.code === 0 && res.data.data) {
       dataList.value = res.data.data.records ?? []
-      total.value = res.data.data.total ?? 0
+      total.value = Number(res.data.data.total) ?? 0
     } else {
       message.error('获取数据失败，' + res.data.message)
     }
