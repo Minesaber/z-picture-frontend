@@ -6,6 +6,7 @@ import * as fileController from './fileController'
 import * as mainController from './mainController'
 import * as pictureController from './pictureController'
 import * as spaceController from './spaceController'
+import * as spaceAnalyzeController from './spaceAnalyzeController'
 import * as userController from './userController'
 import * as wxCallbackController from './wxCallbackController'
 import * as wxLoginController from './wxLoginController'
@@ -14,6 +15,7 @@ export default {
   mainController,
   pictureController,
   spaceController,
+  spaceAnalyzeController,
   userController,
   wxCallbackController,
   wxLoginController,

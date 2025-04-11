@@ -11,11 +11,8 @@ export async function healthUsingGet1(options?: { [key: string]: any }) {
 }
 
 /** callBack POST /api/wx/example/forward */
-export async function callBackUsingPost(
-  body: API.WxTxtMsgRequest,
-  options?: { [key: string]: any }
-) {
-  return request<API.WxMsgRequest>('/api/wx/example/forward', {
+export async function callBackUsingPost(body: API.WxMsgRequest, options?: { [key: string]: any }) {
+  return request<API.WxMsgVO>('/api/wx/example/forward', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/xml',

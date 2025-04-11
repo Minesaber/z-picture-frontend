@@ -37,6 +37,16 @@ myAxios.interceptors.response.use(
         }, 1)
       }
     }
+    if (data.code === 40000) {
+      if (
+        !response.request.responseURL.includes('user/get/login') &&
+        !window.location.pathname.includes('/user/login')
+      ) {
+        setTimeout(() => {
+          router.push(`/`)
+        }, 1)
+      }
+    }
     return response
   },
   function (error) {
